@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="30dp"
+              >
+
+    <LinearLayout android:layout_width="250dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:id="@+id/item_container">
+
+
+
+    <TextView android:id="@+id/tv_name" android:layout_width="250dp"
+              android:singleLine="true"
+              android:ellipsize="marquee"
+              android:focusableInTouchMode="true"   android:marqueeRepeatLimit="marquee_forever"
+              android:focusable="true"  android:layout_height="wrap_content"
+              android:textColor="#ff0000"/>
+    <TextView android:id="@+id/tv_address" android:layout_width="250dp"
+              android:singleLine="true"
+              android:focusableInTouchMode="true"
+              android:ellipsize="marquee"
+              android:focusable="true"   android:marqueeRepeatLimit="marquee_forever"
+              android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <ImageView android:id="@+id/item_connect" android:layout_width="40dp"
+            android:clickable="false"
+            android:background="@mipmap/fangkuang"
+            android:layout_height="40dp"
+               android:contextClickable="false"
+      />
+
+    <!--<Button android:id="@+id/item_connect" android:layout_width="60dp"-->
+            <!--android:clickable="false"-->
+            <!--android:textSize="10sp"-->
+            <!--android:background="@mipmap/test_button_4"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:text="连接到该设备"/>-->
+</LinearLayout>
