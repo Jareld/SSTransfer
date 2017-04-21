@@ -112,6 +112,7 @@ public class FlikerProgressBar
 
     public FlikerProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Log.d(TAG, "FlikerProgressBar: 走这个生命周期");
         initAttrs(attrs);
     }
 
@@ -131,6 +132,7 @@ public class FlikerProgressBar
     }
 
     private void init() {
+        Log.d(TAG, "init: yixia");
         bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         bgPaint.setStyle(Paint.Style.STROKE);
         bgPaint.setStrokeWidth(borderWidth);
@@ -188,6 +190,7 @@ public class FlikerProgressBar
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.d(TAG, "onMeasure: ");
         int widthSpecSize  = MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);

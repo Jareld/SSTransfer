@@ -124,6 +124,7 @@
                                                                app:borderWidth="3dp"
                                                                app:radius="15dp"
                                                                app:textSize="15sp"
+                                                               android:visibility="invisible"
     />
 
 </LinearLayout>
