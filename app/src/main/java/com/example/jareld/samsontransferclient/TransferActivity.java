@@ -17,6 +17,7 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,8 +73,21 @@ public class TransferActivity
     private LinearLayout      mConnect_info_container;
     private TextView          mTv_connected_info_address;
     private TextView          mTv_connected_info_name;
-    private FlikerProgressBar mFliker_pregress;
 
+    private FlikerProgressBar mFliker_pregress;
+private static final  int MISS_PROGRESS = 1;
+    private Handler mHandler= new Handler(){
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            case MISS_PROGRESS:
+                mFliker_pregress.setVisibility(View.GONE);
+                 break;
+            default:
+                 break;
+        }
+    }
+};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +101,7 @@ public class TransferActivity
     }
 
     private void initRxBus() {
+
         mSubscription = RxBus.getInstance()
                              .toObserverable(UserEvent.class)
                              .subscribe(new Action1<UserEvent>() {
@@ -506,7 +521,7 @@ public class TransferActivity
         mTv_connected_info_address.setSelected(true);
 
         mFliker_pregress = (FlikerProgressBar) findViewById(R.id.fliker_progress);
-        mFliker_pregress.setVisibility(View.GONE);
+        mHandler.sendEmptyMessageDelayed(MISS_PROGRESS , 50);
     }
 
     @Override
