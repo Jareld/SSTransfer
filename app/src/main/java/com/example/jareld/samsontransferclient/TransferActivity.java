@@ -94,10 +94,16 @@ private static final  int MISS_PROGRESS = 1;
         setContentView(R.layout.activity_client);
         getSupportActionBar().hide();
         initView();
+        initData();
         initFilter();
         initReceiver();
         initEvent();
         initRxBus();
+    }
+
+    private void initData() {
+
+
     }
 
     private void initRxBus() {
@@ -138,11 +144,10 @@ private static final  int MISS_PROGRESS = 1;
                                                      }
                                                      if (mTv_trans_file.getVisibility() == View.GONE) {
                                                          mTv_trans_file.setVisibility(View.VISIBLE);
-                                                         mTv_trans_file.setText("上一次文件传输完成，点击发送文件进行文件传输");
+                                                         mTv_trans_file.setText("上一次文件传输完成，点击发送文件再进行文件传输");
                                                      }
 
-                                                     Log.d(TAG,
-                                                           "run: mRcyc_devices" + (mRcyc_devices.getVisibility() == View.GONE));
+                                                     Log.d(TAG,  "run: mRcyc_devices" + (mRcyc_devices.getVisibility() == View.GONE));
 
                                                  }
                                              });
@@ -504,6 +509,7 @@ private static final  int MISS_PROGRESS = 1;
     }
 
     private void initView() {
+
         mRcyc_devices = (RecyclerView) findViewById(R.id.devices);
         mBtn_search = (Button) findViewById(R.id.search_device);
         mBtn_connect_device = (Button) findViewById(R.id.connect_device);
