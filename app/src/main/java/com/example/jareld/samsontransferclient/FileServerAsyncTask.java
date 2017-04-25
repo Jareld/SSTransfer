@@ -136,32 +136,29 @@ public class FileServerAsyncTask
     public static boolean   copyFileClient(InputStream inputStream, OutputStream out, byte[] buf ,Socket socket , long fileLength) {
         int  len;
         long length = 0;
-
         try {
-
-            int available = inputStream.available();
+            long available = inputStream.available();
             //1480396906677开始时间
             //1480396972009   401635803
-            Log.d(TAG, "copyFileClient: 到了transfer_file_start之前");
-            int fileMB =   (available / 1024  );
+            long fileMB =   ( available / 1024 );
+            if(fileMB == 0){
+                fileMB = fileLength / 1024 ;
+            }
+            Log.d(TAG, "copyFileClient: 到了transfer_file_start之前" +fileMB);
             RxBus.getInstance().post(new UserEvent(fileMB , "transfer_file_start"));
             UserEvent userEvent = new UserEvent(0, "doing");
-
-
+            userEvent.setFileLengthMB(fileMB);
             while ((len = inputStream.read(buf)) != -1) {
                 out.write(buf, 0, len);
                 //输出端要fluch
                 //输入端不要flush
                 out.flush();
-
                 length += len;
-
                 userEvent.setProgress(length / 1024 );
-                userEvent.setFileLengthMB(fileMB);
                 RxBus.getInstance()
                      .post(userEvent);
 
-                LogUtils.logInfo(TAG, "HYcopyFile: ", "百分比" + length + "::");
+                LogUtils.logInfo(TAG, "HYcopyFile: ", "百分比" + length + "::" +fileLength);
 
             }
             Log.d(TAG, "copyFileClient: 百分比之后");

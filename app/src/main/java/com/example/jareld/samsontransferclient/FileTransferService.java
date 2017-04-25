@@ -36,6 +36,7 @@ public class FileTransferService
     public static final  String EXTRAS_GROUP_OWNER_ADDRESS = "sf_go_host";
     public static final  String EXTRAS_GROUP_OWNER_PORT    = "sf_go_port";
     private long mLength;
+    private long mAvailable;
 
 
     public FileTransferService() {
@@ -94,32 +95,40 @@ public class FileTransferService
 
                 OutputStream stream = socket.getOutputStream();
 
-
-
                 ContentResolver cr = context.getContentResolver();
                 InputStream     is = null;
                 try {
                     File file = new File(Uri.parse(fileUri)
                                             .toString());
 
+
+
                     mLength = file.length();
+                        Log.d(TAG, "onHandleIntent: "+fileUri+"::"+file.getTotalSpace());
 
 
 
+
+                    File f = new File(realPath);
+                    Log.d(TAG, "onHandleIntent: "+f.length() +"::" + realPath);
                     RxBus.getInstance()
                          .post(new UserEvent(mLength, "before"));
 
                     is = cr.openInputStream(Uri.parse(fileUri));
-                    int available = is.available();
+                    mAvailable = is.available();
+                    if(mAvailable == 0){
+                        mAvailable = f.length();
+                    }
                     int xiegang         = realPath.lastIndexOf("/");
                     realPath = realPath.substring(xiegang + 1);
-                    stream.write(("<filepath>" +available+"-=-="+ realPath  + "<//filepath>").getBytes());
+                    Log.d(TAG, "onHandleIntent: available" + mAvailable +"::"+realPath);
+                    stream.write(("<filepath>" + mAvailable +"-=-="+ realPath  + "<//filepath>").getBytes());
                 } catch (FileNotFoundException e) {
                     Log.d("xyz", e.toString());
                     LogUtils.logException(TAG, "在客戶端發送打開文件的時候出錯了" + e.toString());
                 }
                 byte buf[] = new byte[1024 * 1024 ];
-                FileServerAsyncTask.copyFileClient(is, stream, buf ,socket , mLength);
+                FileServerAsyncTask.copyFileClient(is, stream, buf ,socket , mAvailable);
                 Log.d("xyz", "Client: Data written");
             } catch (IOException e) {
                 Log.e("xyz", e.getMessage());
