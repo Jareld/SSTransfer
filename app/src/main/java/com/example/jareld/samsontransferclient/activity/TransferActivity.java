@@ -1,5 +1,6 @@
 package com.example.jareld.samsontransferclient;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,6 +24,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +50,8 @@ public class TransferActivity
         implements View.OnClickListener
 {
 
-    private static final String TAG = "ClientActivity";
+    private static final String TAG                      = "ClientActivity";
+    private static final int    MY_READ_EXTERNAL_STORAGE = 100;
     private RecyclerView                          mRcyc_devices;
     private Button                                mBtn_stop_connect;
     private Button                                mBtn_search;
@@ -72,40 +78,77 @@ public class TransferActivity
     private TextView mTv_connect_info;
     private Button   mBtn_connect_device;
     private int beSelectDevicePosition = -1;
-    private DeviceAdapter     mAdapter;
-    private LinearLayout      mConnect_info_container;
-    private TextView          mTv_connected_info_address;
-    private TextView          mTv_connected_info_name;
+    private DeviceAdapter mAdapter;
+    private LinearLayout  mConnect_info_container;
+    private TextView      mTv_connected_info_address;
+    private TextView      mTv_connected_info_name;
 
     private FlikerProgressBar mFliker_pregress;
-private static final  int MISS_PROGRESS = 1;
-    private Handler mHandler= new Handler(){
-    @Override
-    public void handleMessage(Message msg) {
-        switch (msg.what) {
-            case MISS_PROGRESS:
-                mFliker_pregress.setVisibility(View.GONE);
-                 break;
-            default:
-                 break;
+    private static final int     MISS_PROGRESS = 1;
+    private              Handler mHandler      = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MISS_PROGRESS:
+                    mFliker_pregress.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-};
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
         getSupportActionBar().hide();
         initView();
+
         initData();
         initFilter();
         initReceiver();
         initEvent();
         initRxBus();
+        checKPermission();
+    }
+
+    private void checKPermission() {
+
+
     }
 
     private void initData() {
+        Log.d(TAG, "checKStoragePermission: ");
+        if (ContextCompat.checkSelfPermission(this,
+                                              Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,
+                                              new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,},
+                                              MY_READ_EXTERNAL_STORAGE);
 
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //处理回调
+        switch (requestCode) {
+            case MY_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else {
+                    //这里是不允许的时候
+                    finish();
+                }
+                break;
+        }
 
     }
 
@@ -147,10 +190,12 @@ private static final  int MISS_PROGRESS = 1;
                                                      }
                                                      if (mTv_trans_file.getVisibility() == View.GONE) {
                                                          mTv_trans_file.setVisibility(View.VISIBLE);
-                                                         mTv_trans_file.setText("上一次文件传输完成，点击发送文件再进行文件传输");
+                                                         mTv_trans_file.setText(
+                                                                 "上一次文件传输完成，点击发送文件再进行文件传输");
                                                      }
 
-                                                     Log.d(TAG,  "run: mRcyc_devices" + (mRcyc_devices.getVisibility() == View.GONE));
+                                                     Log.d(TAG,
+                                                           "run: mRcyc_devices" + (mRcyc_devices.getVisibility() == View.GONE));
 
                                                  }
                                              });
@@ -160,7 +205,7 @@ private static final  int MISS_PROGRESS = 1;
                                          case "doing":
                                              //  float per = (float) userEvent.getProgress() / (float) fileLength;
                                              final float finalPer = userEvent.getProgress();
-                                             final long  fileLengthMB = userEvent.getFileLengthMB();
+                                             final long fileLengthMB = userEvent.getFileLengthMB();
 
                                              isDoing = true;
                                              handler.post(new Runnable() {
@@ -531,7 +576,7 @@ private static final  int MISS_PROGRESS = 1;
         mTv_connected_info_address.setSelected(true);
 
         mFliker_pregress = (FlikerProgressBar) findViewById(R.id.fliker_progress);
-        mHandler.sendEmptyMessageDelayed(MISS_PROGRESS , 50);
+        mHandler.sendEmptyMessageDelayed(MISS_PROGRESS, 50);
     }
 
     @Override
@@ -684,6 +729,59 @@ private static final  int MISS_PROGRESS = 1;
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("video/*;image/*");
                 startActivityForResult(intent, 20);
+
+
+                ArrayList picPaths = new ArrayList<String>();
+                ArrayList videoPaths = new ArrayList<String>();
+                ContentResolver contentResolver = getApplicationContext().getContentResolver();
+                Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                StringBuilder where = new StringBuilder();
+                where.append(MediaStore.Video.Media.TITLE + " != ''");
+
+                String[] projection = new String[]{MediaStore.Video.Media.TITLE,
+                                                   MediaStore.Video.Media.DATA};
+                where.append(" AND " + MediaStore.Video.Media.DATA + " LIKE '%" + "DCIM" + "%'");
+                final Cursor cursor = contentResolver.query(uri,
+                                                            projection,
+                                                            where.toString(),
+                                                            null,
+                                                            MediaStore.Video.Media.DEFAULT_SORT_ORDER);
+                if (cursor == null) {
+
+                    return;
+                }
+                if (cursor.moveToFirst()) {
+                    do {
+                        String path  = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                        videoPaths.add(path);
+                    } while (cursor.moveToNext());
+                }
+
+
+                Uri uri_dcim = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                StringBuilder where_dcim = new StringBuilder();
+                where_dcim.append(MediaStore.Images.Media.TITLE + " != ''");
+                String[] projection_dcim = new String[]{MediaStore.Images.Media.TITLE,
+                                                        MediaStore.Images.Media.DATA};
+                where_dcim.append(" AND " + MediaStore.Images.Media.DATA + " LIKE '%" + "DCIM" + "%'");
+                final Cursor cursor_dcim = contentResolver.query(uri_dcim,
+                                                                 projection_dcim,
+                                                                 where_dcim.toString(),
+                                                                 null,
+                                                                 MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+                if (cursor_dcim == null) {
+
+                    return;
+                }
+                if (cursor_dcim.moveToFirst()) {
+                    do {
+                        String path = cursor_dcim.getString(cursor_dcim.getColumnIndexOrThrow(
+                                MediaStore.Images.Media.DATA));
+                        picPaths.add(path);
+                    } while (cursor_dcim.moveToNext());
+                }
+
+
                 break;
 
             default:
@@ -717,7 +815,7 @@ private static final  int MISS_PROGRESS = 1;
                     Intent serviceIntent = new Intent(TransferActivity.this,
                                                       FileTransferService.class);
 
-                    String realFilePath = getFileAbsolutePath( getApplicationContext(), uri);
+                    String realFilePath = getFileAbsolutePath(getApplicationContext(), uri);
                     LogUtils.logInfo(TAG, "run", "进行到了这里" + realFilePath);
                     mBeTransferFileName = realFilePath;
                     serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
@@ -797,26 +895,29 @@ private static final  int MISS_PROGRESS = 1;
         return data;
     }
 
-    public   String getFileAbsolutePath(Context context, Uri fileUri) {
-        if (context == null || fileUri == null)
-            return null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, fileUri)) {
+    public String getFileAbsolutePath(Context context, Uri fileUri) {
+        if (context == null || fileUri == null) { return null; }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(
+                context,
+                fileUri))
+        {
             if (isExternalStorageDocument(fileUri)) {
-                String docId = DocumentsContract.getDocumentId(fileUri);
+                String   docId = DocumentsContract.getDocumentId(fileUri);
                 String[] split = docId.split(":");
-                String type = split[0];
+                String   type  = split[0];
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             } else if (isDownloadsDocument(fileUri)) {
-                String id = DocumentsContract.getDocumentId(fileUri);
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                String id         = DocumentsContract.getDocumentId(fileUri);
+                Uri    contentUri = ContentUris.withAppendedId(Uri.parse(
+                        "content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             } else if (isMediaDocument(fileUri)) {
-                String docId = DocumentsContract.getDocumentId(fileUri);
-                String[] split = docId.split(":");
-                String type = split[0];
-                Uri contentUri = null;
+                String   docId      = DocumentsContract.getDocumentId(fileUri);
+                String[] split      = docId.split(":");
+                String   type       = split[0];
+                Uri      contentUri = null;
                 if ("image".equals(type)) {
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 } else if ("video".equals(type)) {
@@ -824,15 +925,14 @@ private static final  int MISS_PROGRESS = 1;
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
-                String selection = MediaStore.Images.Media._ID + "=?";
-                String[] selectionArgs = new String[] { split[1] };
+                String   selection     = MediaStore.Images.Media._ID + "=?";
+                String[] selectionArgs = new String[]{split[1]};
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         } // MediaStore (and general)
         else if ("content".equalsIgnoreCase(fileUri.getScheme())) {
             // Return the remote address
-            if (isGooglePhotosUri(fileUri))
-                return fileUri.getLastPathSegment();
+            if (isGooglePhotosUri(fileUri)) { return fileUri.getLastPathSegment(); }
             return getDataColumn(context, fileUri, null, null);
         }
         // File
@@ -841,18 +941,23 @@ private static final  int MISS_PROGRESS = 1;
         }
         return null;
     }
-    public   String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+
+    public String getDataColumn(Context context,
+                                Uri uri,
+                                String selection,
+                                String[] selectionArgs)
+    {
         Cursor   cursor     = null;
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            cursor = context.getContentResolver()
+                            .query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null)
-                cursor.close();
+            if (cursor != null) { cursor.close(); }
         }
         return null;
     }
@@ -862,7 +967,7 @@ private static final  int MISS_PROGRESS = 1;
      *            The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public   boolean isExternalStorageDocument(Uri uri) {
+    public boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -871,7 +976,7 @@ private static final  int MISS_PROGRESS = 1;
      *            The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public   boolean isDownloadsDocument(Uri uri) {
+    public boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -880,7 +985,7 @@ private static final  int MISS_PROGRESS = 1;
      *            The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public   boolean isMediaDocument(Uri uri) {
+    public boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -889,7 +994,7 @@ private static final  int MISS_PROGRESS = 1;
      *            The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public   boolean isGooglePhotosUri(Uri uri) {
+    public boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 }

@@ -16,20 +16,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                  android:screenOrientation="sensorLandscape"
-        >
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".TransferActivity"
-                  android:screenOrientation="sensorLandscape"
-        >
+        <activity
+            android:name=".TransferActivity"
+            android:screenOrientation="sensorLandscape">
         </activity>
-        <service android:name=".FileTransferService"></service>
+
+        <service android:name=".FileTransferService"/>
+
+        <activity android:name=".PicVideoSelectorActivity">
+        </activity>
     </application>
 
 </manifest>
