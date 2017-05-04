@@ -1,4 +1,4 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.utils;
 
 /*
  *  @项目名：  TestWifiDerect 

@@ -1,4 +1,4 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,6 +16,8 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.example.jareld.samsontransferclient.R;
 
 /*
  *  @项目名：  TestSocket 

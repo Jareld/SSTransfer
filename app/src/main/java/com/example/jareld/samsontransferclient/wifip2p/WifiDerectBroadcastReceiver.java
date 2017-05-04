@@ -1,4 +1,4 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.wifip2p;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -9,6 +9,9 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
+
+import com.example.jareld.samsontransferclient.utils.RxBus;
+import com.example.jareld.samsontransferclient.utils.UserEvent;
 
 
 /*

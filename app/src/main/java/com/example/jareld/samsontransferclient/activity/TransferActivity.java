@@ -1,4 +1,4 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -36,6 +36,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.jareld.samsontransferclient.R;
+import com.example.jareld.samsontransferclient.utils.UserEvent;
+import com.example.jareld.samsontransferclient.wifip2p.WifiDerectBroadcastReceiver;
+import com.example.jareld.samsontransferclient.adapter.DeviceAdapter;
+import com.example.jareld.samsontransferclient.customview.FlikerProgressBar;
+import com.example.jareld.samsontransferclient.utils.LogUtils;
+import com.example.jareld.samsontransferclient.utils.RxBus;
+import com.example.jareld.samsontransferclient.wifip2p.FileTransferService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -726,9 +735,7 @@ public class TransferActivity
                 break;
 
             case R.id.send_file:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("video/*;image/*");
-                startActivityForResult(intent, 20);
+                Intent intent = new Intent(this,PicVideoSelectorActivity.class);
 
 
                 ArrayList picPaths = new ArrayList<String>();
@@ -780,7 +787,9 @@ public class TransferActivity
                         picPaths.add(path);
                     } while (cursor_dcim.moveToNext());
                 }
-
+                intent.putExtra("pics" , picPaths);
+                intent.putExtra("videos" , videoPaths);
+                startActivityForResult(intent, 20);
 
                 break;
 
@@ -810,32 +819,22 @@ public class TransferActivity
                          .show();
                 } else {
                     LogUtils.logInfo(TAG, "run", "进行到了这里");
-                    Uri uri = data.getData();
+                    ArrayList<String> selected_pv = data.getStringArrayListExtra("selected_pv");
 
                     Intent serviceIntent = new Intent(TransferActivity.this,
                                                       FileTransferService.class);
 
-                    String realFilePath = getFileAbsolutePath(getApplicationContext(), uri);
-                    LogUtils.logInfo(TAG, "run", "进行到了这里" + realFilePath);
-                    mBeTransferFileName = realFilePath;
+                    mBeTransferFileName = selected_pv.size()+"::";
+
                     serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
 
-                    serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+                    serviceIntent.putExtra(FileTransferService.REAL_FILE_PATH , selected_pv);
 
-                    serviceIntent.putExtra(FileTransferService.REAL_FILE_PATH, realFilePath);
-
-
-                    Log.d(TAG,
-                          "onActivityResult:realFilePath " + realFilePath + "::uri.toString()" + Uri.parse(
-                                  uri.toString())
-                                                                                                    .toString());
-                    serviceIntent.putExtra(FileTransferService.BE_CLICKED_DEVICE_NAME,
-                                           mBeClickedDeviceName);
 
                     serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
                                            mInfo.groupOwnerAddress.getHostAddress());
 
-                    serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+                    serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 10086);
 
                     TransferActivity.this.startService(serviceIntent);
                     if (mFliker_pregress.getVisibility() == View.GONE) {

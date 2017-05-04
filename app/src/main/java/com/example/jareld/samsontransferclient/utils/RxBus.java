@@ -1,4 +1,4 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.utils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;

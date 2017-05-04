@@ -115,16 +115,17 @@
               android:ellipsize="marquee"
               android:layout_marginLeft="40dp"
               android:text="点击发送文件进行文件传输"></TextView>
-    <com.example.jareld.samsontransferclient.FlikerProgressBar android:id="@+id/fliker_progress"
-                                                               android:layout_width="360dp"
-                                                               android:layout_height="wrap_content"
-                                                                android:layout_marginLeft="60dp"
-                                                               android:layout_marginTop="20dp"
-                                                               android:layout_marginRight="20dp"
-                                                               app:borderWidth="3dp"
-                                                               app:radius="15dp"
-                                                               app:textSize="15sp"
-                                                               android:visibility="invisible"
+    <com.example.jareld.samsontransferclient.customview.FlikerProgressBar
+        android:id="@+id/fliker_progress"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:borderWidth="3dp"
+        app:radius="15dp"
+        app:textSize="15sp"
+        android:visibility="invisible"
     />
 
 </LinearLayout>

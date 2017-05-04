@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -26,13 +26,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TransferActivity"
+            android:name=".activity.TransferActivity"
             android:screenOrientation="sensorLandscape">
         </activity>
 
-        <service android:name=".FileTransferService"/>
+        <service android:name=".wifip2p.FileTransferService"/>
 
-        <activity android:name=".PicVideoSelectorActivity">
+        <activity android:name=".activity.PicVideoSelectorActivity">
         </activity>
     </application>
 

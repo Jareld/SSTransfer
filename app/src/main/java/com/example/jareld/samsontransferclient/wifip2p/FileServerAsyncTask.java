@@ -1,8 +1,12 @@
-package com.example.jareld.samsontransferclient;
+package com.example.jareld.samsontransferclient.wifip2p;
 
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+
+import com.example.jareld.samsontransferclient.utils.LogUtils;
+import com.example.jareld.samsontransferclient.utils.RxBus;
+import com.example.jareld.samsontransferclient.utils.UserEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
