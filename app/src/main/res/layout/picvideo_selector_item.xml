@@ -2,8 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                  android:layout_centerInParent="true">
 <RelativeLayout
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
@@ -25,10 +29,12 @@
         android:id="@+id/iv_dagou"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:padding="1.5dp"
+        android:scaleType="fitXY"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:visibility="gone"
-        android:src="@mipmap/dagou"/>
+        android:src="@mipmap/dagou_honghong"/>
 
 
 </RelativeLayout>

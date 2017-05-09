@@ -32,7 +32,9 @@
 
         <service android:name=".wifip2p.FileTransferService"/>
 
-        <activity android:name=".activity.PicVideoSelectorActivity">
+        <activity android:name=".activity.PicVideoSelectorActivity"
+            android:screenOrientation="sensorLandscape"
+            >
         </activity>
     </application>
 

@@ -24,9 +24,9 @@ public class PicVideoSelectorActivity
 {
 
     private static final String TAG = "PicVideo";
-    private RecyclerView mRecyclerView;
+    private RecyclerView   mRecyclerView;
     private PicVideoAdpter mPicVideoAdpter;
-    private Button mBtn_confirm;
+    private Button         mBtn_confirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,8 @@ public class PicVideoSelectorActivity
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.select_recyclerView);
         mBtn_confirm = (Button) findViewById(R.id.btn_confirm);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        GridLayoutManager manager =new GridLayoutManager(this, 4,GridLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
     }
 
     @Override

@@ -38,13 +38,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jareld.samsontransferclient.R;
-import com.example.jareld.samsontransferclient.utils.UserEvent;
-import com.example.jareld.samsontransferclient.wifip2p.WifiDerectBroadcastReceiver;
 import com.example.jareld.samsontransferclient.adapter.DeviceAdapter;
 import com.example.jareld.samsontransferclient.customview.FlikerProgressBar;
 import com.example.jareld.samsontransferclient.utils.LogUtils;
 import com.example.jareld.samsontransferclient.utils.RxBus;
+import com.example.jareld.samsontransferclient.utils.UserEvent;
 import com.example.jareld.samsontransferclient.wifip2p.FileTransferService;
+import com.example.jareld.samsontransferclient.wifip2p.WifiDerectBroadcastReceiver;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
