@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.jareld.samsontransferclient.R;
 import com.example.jareld.samsontransferclient.adapter.PicVideoAdpter;
@@ -27,6 +28,7 @@ public class PicVideoSelectorActivity
     private RecyclerView   mRecyclerView;
     private PicVideoAdpter mPicVideoAdpter;
     private Button         mBtn_confirm;
+    private TextView mTv_send_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class PicVideoSelectorActivity
             arrayList.add(file);
         }
         Collections.sort(arrayList, new FileComparator());
-        mPicVideoAdpter = new PicVideoAdpter(getApplicationContext() , arrayList);
+        mPicVideoAdpter = new PicVideoAdpter(this , arrayList);
         mRecyclerView.setAdapter(mPicVideoAdpter);
 
 
@@ -71,7 +73,8 @@ public class PicVideoSelectorActivity
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.select_recyclerView);
         mBtn_confirm = (Button) findViewById(R.id.btn_confirm);
-        GridLayoutManager manager =new GridLayoutManager(this, 4,GridLayoutManager.VERTICAL, false);
+        mTv_send_info = (TextView) findViewById(R.id.tv_send_file);
+        GridLayoutManager manager      =new GridLayoutManager(this, 4,GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
     }
 
@@ -137,5 +140,9 @@ public class PicVideoSelectorActivity
                 outRect.right = 0;
             }
         }
+    }
+
+    public void setSendInfo(String text){
+        mTv_send_info.setText("发送图片" + text);
     }
 }

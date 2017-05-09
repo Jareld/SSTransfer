@@ -39,7 +39,15 @@ android:gravity="center"
 
 </RelativeLayout>
 
-
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/video_info"
+        android:src="@mipmap/video_info_red"
+        android:scaleType="fitXY"
+        />
 
 
 </RelativeLayout>

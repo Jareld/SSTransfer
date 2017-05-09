@@ -21,6 +21,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="20dp"
             android:textSize="18sp"
+            android:id="@+id/tv_send_file"
             android:text="发送图片"/>
 
         <Button
