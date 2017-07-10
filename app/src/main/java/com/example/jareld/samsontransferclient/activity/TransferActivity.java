@@ -58,6 +58,7 @@ public class TransferActivity
         extends AppCompatActivity
         implements View.OnClickListener
 {
+android.hardware.Camera mCamera;
 
     private static final String TAG                      = "ClientActivity";
     private static final int    MY_READ_EXTERNAL_STORAGE = 100;
@@ -113,7 +114,6 @@ public class TransferActivity
         setContentView(R.layout.activity_client);
         getSupportActionBar().hide();
         initView();
-
         initData();
         initFilter();
         initReceiver();
@@ -199,6 +199,9 @@ public class TransferActivity
                                                      }
                                                      if (mTv_trans_file.getVisibility() == View.GONE) {
                                                          mTv_trans_file.setVisibility(View.VISIBLE);
+                                                          //中文 上一次文件传输完成，点击发送文件再进行文件传输
+                                                 //        mTv_trans_file.setText(
+                                                 //                "The last time the file transfer is complete, click to send the file and then transfer the file");
                                                          mTv_trans_file.setText(
                                                                  "上一次文件传输完成，点击发送文件再进行文件传输");
                                                      }
@@ -236,6 +239,11 @@ public class TransferActivity
                                              }
                                              if (mIsFromCreateConnect) {
                                                  Log.d(TAG, "call: 这里是来自客户端的申请连接  然后把圈圈给miss掉");
+                                                 //中文   连接失败 , 请重新连接
+//                                                 Toast.makeText(getApplicationContext(),
+//                                                                "The connection failed, please reconnect",
+//                                                                Toast.LENGTH_SHORT)
+//                                                      .show();
                                                  Toast.makeText(getApplicationContext(),
                                                                 "连接失败 , 请重新连接",
                                                                 Toast.LENGTH_SHORT)
@@ -243,8 +251,9 @@ public class TransferActivity
                                                  mIsFromCreateConnect = false;
                                              }
                                              isDoing = false;
+                                             //中文 点击发送文件进行文件传输
+                                           //  mTv_trans_file.setText("Click to send the file for file transfer");
                                              mTv_trans_file.setText("点击发送文件进行文件传输");
-
                                              mConnect_info_container.setVisibility(View.GONE);
                                              mRcyc_devices.setVisibility(View.VISIBLE);
                                              mIsConnect = false;
@@ -252,14 +261,24 @@ public class TransferActivity
                                              beSelectDevicePosition = -1;
                                              break;
                                          case "connect_fail":
-
+                                                //中文  启动文件传输失败 ，请重新发送文件
+//                                             Toast.makeText(getApplicationContext(),
+//                                                            "Start file transfer failed, please resend the file",
+//                                                            Toast.LENGTH_SHORT)
+//                                                  .show();
                                              Toast.makeText(getApplicationContext(),
                                                             "启动文件传输失败 ，请重新发送文件",
                                                             Toast.LENGTH_SHORT)
                                                   .show();
                                              isDoing = false;
                                              Log.d(TAG, "run: 通过connect_fail进入的reset模式");
-                                             mFliker_pregress.reset();
+                                             handler.post(new Runnable() {
+                                                 @Override
+                                                 public void run() {
+                                                     mFliker_pregress.reset();
+
+                                                 }
+                                             });
                                              break;
                                      }
 
@@ -312,7 +331,10 @@ public class TransferActivity
                     } else {
                         mTv_connect_info.setVisibility(View.VISIBLE);
                         mRcyc_devices.setVisibility(View.VISIBLE);
+                        //  mTv_connect_info.setText("The device being searched for:");
                         mTv_connect_info.setText("搜索到设备:");
+
+                        //中文  搜索到设备:
                     }
                 } else if (mPeerLists != null && mPeerLists.size() == 0) {
                     mTv_connect_info.setVisibility(View.GONE);
@@ -390,6 +412,7 @@ public class TransferActivity
                 });
             }
         };
+      String taskA=  this.getApplicationInfo().taskAffinity;
         //这是申请连接后的回调
         mConnectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
             @Override
@@ -429,10 +452,20 @@ public class TransferActivity
                                       "onConnectionInfoAvailable: 这个wifidevice连接上了" + wifiP2pDevice.deviceName);
                                 mConnect_info_container.setVisibility(View.VISIBLE);
                                 mRcyc_devices.setVisibility(View.GONE);
+                                //中文     设备名称：
+                              //  mTv_connected_info_name.setText("Device name：" + wifiP2pDevice.deviceName);
                                 mTv_connected_info_name.setText("设备名称：" + wifiP2pDevice.deviceName);
+                                //中文     设备地址：
+                               // mTv_connected_info_address.setText("Device address：" + wifiP2pDevice.deviceAddress);
                                 mTv_connected_info_address.setText("设备地址：" + wifiP2pDevice.deviceAddress);
                                 mIsConnect = true;
+                                //中文  已经连接到设备：
+                                //  mTv_connect_info.setText("Has been connected to the device：");
                                 mTv_connect_info.setText("已经连接到设备：");
+
+                                //中文 连接成功
+//                                Toast.makeText(TransferActivity.this, "Connect Success", Toast.LENGTH_SHORT)
+//                                     .show();
                                 Toast.makeText(TransferActivity.this, "连接成功", Toast.LENGTH_SHORT)
                                      .show();
                                 mIsFromCreateConnect = false;
@@ -441,7 +474,9 @@ public class TransferActivity
                             }
                         }
 
-
+                        //中文  ： 连接失败 ，请重新连接
+//                        Toast.makeText(TransferActivity.this, "The connection failed, please reconnect", Toast.LENGTH_SHORT)
+//                             .show();
                         Toast.makeText(TransferActivity.this, "连接失败 ，请重新连接", Toast.LENGTH_SHORT)
                              .show();
 
@@ -477,6 +512,7 @@ public class TransferActivity
         if (connectingProgressDialog != null && connectingProgressDialog.isShowing()) {
             connectingProgressDialog.dismiss();
         }
+        //中文  连接设备   连接中 :
         connectingProgressDialog = ProgressDialog.show(this, "连接设备", "连接中 :" + address, true, true,
                                                        // cancellable
                                                        new DialogInterface.OnCancelListener() {
@@ -485,7 +521,9 @@ public class TransferActivity
                                                            {
                                                                mConnect_info_container.setVisibility(
                                                                        View.GONE);
-                                                               mTv_trans_file.setText("点击发送文件进行文件传输");
+                                                               //中文 点击发送文件进行文件传输
+                                                               // mTv_trans_file.setText("Click to send the file for file transfer");
+                                                                mTv_trans_file.setText("点击发送文件进行文件传输");
                                                                mRcyc_devices.setVisibility(View.VISIBLE);
                                                                mManager.stopPeerDiscovery(mChannel,
                                                                                           new WifiP2pManager.ActionListener() {
@@ -538,8 +576,10 @@ public class TransferActivity
             @Override
             public void onFailure(int reason) {
                 LogUtils.logInfo(TAG, "createConnet: ", "连接失败了");
-
-                Toast.makeText(TransferActivity.this, "连接失败", Toast.LENGTH_SHORT)
+//中文  连接失败
+//                Toast.makeText(TransferActivity.this, "The connection failed ", Toast.LENGTH_SHORT)
+//                     .show();
+                Toast.makeText(TransferActivity.this, "连接失败 ", Toast.LENGTH_SHORT)
                      .show();
             }
         });
@@ -636,6 +676,11 @@ public class TransferActivity
             case R.id.search_device:
                 if (mIsConnect) {
                     //正在连接
+                    //中文 已经处于连接状态，请先断开连接再进行搜索
+//                    Toast.makeText(getApplicationContext(),
+//                                   "Is already connected, please disconnect and then search",
+//                                   Toast.LENGTH_SHORT)
+//                         .show();
                     Toast.makeText(getApplicationContext(),
                                    "已经处于连接状态，请先断开连接再进行搜索",
                                    Toast.LENGTH_SHORT)
@@ -647,6 +692,7 @@ public class TransferActivity
                 if (discoverProgressDialog != null && discoverProgressDialog.isShowing()) {
                     discoverProgressDialog.dismiss();
                 }
+                //中文  搜索设备 ，  搜索中......
                 discoverProgressDialog = ProgressDialog.show(this, "搜索设备", "搜索中......:", true, true,
                                                              // cancellable
                                                              new DialogInterface.OnCancelListener() {
@@ -674,6 +720,9 @@ public class TransferActivity
             case R.id.connect_device:
                 if (mIsConnect) {
                     //正在连接
+                    //中文  已经处于连接状态，请先断开连接
+//                    Toast.makeText(getApplicationContext(), "Is already connected. Please disconnect", Toast.LENGTH_SHORT)
+//                         .show();
                     Toast.makeText(getApplicationContext(), "已经处于连接状态，请先断开连接", Toast.LENGTH_SHORT)
                          .show();
                     return;
@@ -689,6 +738,9 @@ public class TransferActivity
                     Log.d(TAG,
                           "onClick: 连接设备" + beSelectDevicePosition + "::" + name + "::" + address);
                 } else {
+                    //中文  还未搜索到设备
+//                    Toast.makeText(getApplicationContext(), "No device has been searched", Toast.LENGTH_SHORT)
+//                         .show();
                     Toast.makeText(getApplicationContext(), "还未搜索到设备", Toast.LENGTH_SHORT)
                          .show();
                 }
@@ -701,6 +753,8 @@ public class TransferActivity
                 mConnect_info_container.setVisibility(View.GONE);
                 if (mTv_trans_file.getVisibility() == View.GONE) {
                     mTv_trans_file.setVisibility(View.VISIBLE);
+                    //中文  点击发送文件进行文件传输
+                  //  mTv_trans_file.setText("Click to send the file for file transfer");
                     mTv_trans_file.setText("点击发送文件进行文件传输");
                 }
                 mRcyc_devices.setVisibility(View.VISIBLE);
@@ -810,11 +864,20 @@ public class TransferActivity
                 super.onActivityResult(requestCode, resultCode, data);
 
                 if (isDoing) {
+                    //中文 ：正在传输文件，等待文件传输完成后再传输
+//                    Toast.makeText(getApplicationContext(),
+//                                   "Is transferring files, waiting for the file transfer to complete and then transfer",
+//                                   Toast.LENGTH_SHORT)
+//                         .show();
                     Toast.makeText(getApplicationContext(),
                                    "正在传输文件，等待文件传输完成后再传输",
                                    Toast.LENGTH_SHORT)
                          .show();
                 } else if (!mIsConnect) {
+
+//中文  请先连接设备
+//                    Toast.makeText(getApplicationContext(), "Please connect the device first", Toast.LENGTH_SHORT)
+//                         .show();
                     Toast.makeText(getApplicationContext(), "请先连接设备", Toast.LENGTH_SHORT)
                          .show();
                 } else {
@@ -829,7 +892,6 @@ public class TransferActivity
                     serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
 
                     serviceIntent.putExtra(FileTransferService.REAL_FILE_PATH , selected_pv);
-
 
                     serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
                                            mInfo.groupOwnerAddress.getHostAddress());

@@ -112,8 +112,11 @@ public class PicVideoAdpter
                     }
                 }
                 file_length /= 1024 * 1024;
+        //中文  ："（选中" + arrayList.size() + "个文件，共"+file_length +"MB）"
 
-                ((PicVideoSelectorActivity) mContext).setSendInfo("（选中" + arrayList.size() + "个文件，共"+file_length +"MB）");
+                // ((PicVideoSelectorActivity) mContext).setSendInfo("（Select " + arrayList.size() + " files，a total of "+file_length +"MB）");
+             ((PicVideoSelectorActivity) mContext).setSendInfo("（选中 " + arrayList.size() + " 个文件，共 "+file_length +"MB）");
+
             }
         });
     }

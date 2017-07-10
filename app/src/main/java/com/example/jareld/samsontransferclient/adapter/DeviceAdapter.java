@@ -2,6 +2,7 @@ package com.example.jareld.samsontransferclient.adapter;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.preference.SwitchPreference;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class DeviceAdapter
     {
         this(peerLists , isServer , resources);
         this.beSelectedPosition = beSelectDevicePosition;
+
     }
 
     public ArrayList<HashMap<String, String>> getList(){
@@ -86,10 +88,17 @@ public class DeviceAdapter
 
     @Override
     public void onBindViewHolder(final DeviceAdapter.MyHolder holder, final int position) {
+        SwitchPreference switchPreference;
+        // 中文  设备名称
+       // holder.mTv_name.setText("Device name：" + mList.get(position)
+       //                                        .get("name"));
         holder.mTv_name.setText("设备名称：" + mList.get(position)
-                                               .get("name"));
+                                                      .get("name"));
+        // 中文  设备地址
+//        holder.mTv_address.setText("Device address：" + mList.get(position)
+//                                                  .get("address"));
         holder.mTv_address.setText("设备地址：" + mList.get(position)
-                                                  .get("address"));
+                                                         .get("address"));
         holder.mTv_name.setSelected(true);
         holder.mTv_address.setSelected(true);
         if(position == beSelectedPosition){

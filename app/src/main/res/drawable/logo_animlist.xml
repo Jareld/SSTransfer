@@ -57,4 +57,33 @@
     <item android:drawable="@drawable/no_055" android:duration="53"></item>
     <item android:drawable="@drawable/no_056" android:duration="53"></item>
     <item android:drawable="@drawable/no_057" android:duration="53"></item>
+    <item android:drawable="@drawable/no_058" android:duration="53"></item>
+    <item android:drawable="@drawable/no_059" android:duration="53"></item>
+    <item android:drawable="@drawable/no_060" android:duration="53"></item>
+    <item android:drawable="@drawable/no_061" android:duration="53"></item>
+    <item android:drawable="@drawable/no_062" android:duration="53"></item>
+    <item android:drawable="@drawable/no_063" android:duration="53"></item>
+    <item android:drawable="@drawable/no_064" android:duration="53"></item>
+    <item android:drawable="@drawable/no_065" android:duration="53"></item>
+    <item android:drawable="@drawable/no_066" android:duration="53"></item>
+    <item android:drawable="@drawable/no_067" android:duration="53"></item>
+    <item android:drawable="@drawable/no_068" android:duration="53"></item>
+    <item android:drawable="@drawable/no_069" android:duration="53"></item>
+    <item android:drawable="@drawable/no_070" android:duration="53"></item>
+    <item android:drawable="@drawable/no_071" android:duration="53"></item>
+    <item android:drawable="@drawable/no_072" android:duration="53"></item>
+    <item android:drawable="@drawable/no_073" android:duration="53"></item>
+    <item android:drawable="@drawable/no_074" android:duration="53"></item>
+    <item android:drawable="@drawable/no_075" android:duration="53"></item>
+    <item android:drawable="@drawable/no_076" android:duration="53"></item>
+    <item android:drawable="@drawable/no_077" android:duration="53"></item>
+    <item android:drawable="@drawable/no_078" android:duration="53"></item>
+    <item android:drawable="@drawable/no_079" android:duration="53"></item>
+    <item android:drawable="@drawable/no_080" android:duration="53"></item>
+    <item android:drawable="@drawable/no_081" android:duration="53"></item>
+    <item android:drawable="@drawable/no_082" android:duration="53"></item>
+    <item android:drawable="@drawable/no_083" android:duration="53"></item>
+    <item android:drawable="@drawable/no_084" android:duration="53"></item>
+    <item android:drawable="@drawable/no_085" android:duration="53"></item>
+    <item android:drawable="@drawable/no_086" android:duration="53"></item>
 </animation-list>

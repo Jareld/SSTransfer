@@ -68,9 +68,9 @@ public class FileTransferService
                   .equals(ACTION_SEND_FILE))
         {
 
-
             String host = intent.getExtras()
                                 .getString(EXTRAS_GROUP_OWNER_ADDRESS);
+
             int port = intent.getExtras()
                              .getInt(EXTRAS_GROUP_OWNER_PORT);
             mStringArrayListExtra = intent.getStringArrayListExtra(REAL_FILE_PATH);

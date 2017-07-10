@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SamsonTransferClient.iml" filepath="$PROJECT_DIR$/SamsonTransferClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SamsonTransfer.iml" filepath="$PROJECT_DIR$/SamsonTransfer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

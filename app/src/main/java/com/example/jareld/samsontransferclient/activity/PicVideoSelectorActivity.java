@@ -40,6 +40,7 @@ public class PicVideoSelectorActivity
         initEvent();
     }
 
+
     private void initEvent() {
         mBtn_confirm.setOnClickListener(this);
     }
@@ -54,6 +55,7 @@ public class PicVideoSelectorActivity
             pic_video_paths.add(pics.get(i));
         }
         for(int i = 0 ; i < videos.size() ; i++){
+
             pic_video_paths.add(videos.get(i));
         }
 
@@ -71,12 +73,19 @@ public class PicVideoSelectorActivity
     }
 
     private void initView() {
+
+
         mRecyclerView = (RecyclerView) findViewById(R.id.select_recyclerView);
         mBtn_confirm = (Button) findViewById(R.id.btn_confirm);
         mTv_send_info = (TextView) findViewById(R.id.tv_send_file);
         GridLayoutManager manager      =new GridLayoutManager(this, 4,GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
+
     }
+
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -143,6 +152,8 @@ public class PicVideoSelectorActivity
     }
 
     public void setSendInfo(String text){
-        mTv_send_info.setText("发送图片" + text);
+        //中文 发送文件
+       // mTv_send_info.setText("Send FiLE" + text);
+        mTv_send_info.setText("发送文件" + text);
     }
 }

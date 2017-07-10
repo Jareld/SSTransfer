@@ -14,4 +14,10 @@ android:background="#000000"
                android:src="@drawable/no_001"
                android:scaleType="fitXY"
                />
+
+
+
+
+
+
 </RelativeLayout>
