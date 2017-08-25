@@ -153,7 +153,7 @@ public class PicVideoSelectorActivity
 
     public void setSendInfo(String text){
         //中文 发送文件
-       // mTv_send_info.setText("Send FiLE" + text);
-        mTv_send_info.setText("发送文件" + text);
+        mTv_send_info.setText("Send File" + text);
+       // mTv_send_info.setText("发送文件" + text);
     }
 }
