@@ -419,26 +419,26 @@ public class FlikerProgressBar
             if (!isStop) {
                 if(progress == 0.0f){
                     //中文   等待发送文件
-                    text = "Waiting to send file";
-                  //  text = "等待发送文件";
+                    //   text = "Waiting to send file";
+                   text = "等待发送文件";
                 } else if (progress == 0.1f){
                     //中文   启动文件传输
-                    text = "Start file transfer...";
-                  //  text = "启动文件传输...";
+                    //   text = "Start file transfer...";
+                   text = "启动文件传输...";
                 }else {
                      //中文  传输中
-                    text = "Transfering" + progress + "%";
-//                    text = "传输中" + progress + "%";
+                    //             text = "Transfering" + progress + "%";
+                   text = "传输中" + progress + "%";
 
                 }  } else {
                 //中文  继续
-                text = "Continue";
-//                text = "继续";
+                //             text = "Continue";
+               text = "继续";
             }
         } else {
             //中文 传输完成
-            text = "Transmission is complete";
- //           text = "传输完成";
+            //        text = "Transmission is complete";
+          text = "传输完成";
         }
 
         return text;
