@@ -22,14 +22,14 @@
             android:layout_marginLeft="20dp"
             android:textSize="18sp"
             android:id="@+id/tv_send_file"
-            android:text="发送文件"/>
+            android:text="Send File"/>
     <!--中文 ： 发送文件-->
         <Button
             android:id="@+id/btn_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="确定"/>
+            android:text="Confirm"/>
     <!--中文 ： 确定-->
     </LinearLayout>
 
