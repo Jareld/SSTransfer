@@ -90,15 +90,15 @@ public class DeviceAdapter
     public void onBindViewHolder(final DeviceAdapter.MyHolder holder, final int position) {
         SwitchPreference switchPreference;
         // 中文  设备名称
-       // holder.mTv_name.setText("Device name：" + mList.get(position)
-       //                                        .get("name"));
-        holder.mTv_name.setText("设备名称：" + mList.get(position)
-                                                      .get("name"));
+       holder.mTv_name.setText("Device name：" + mList.get(position)
+                                              .get("name"));
+   //      holder.mTv_name.setText("设备名称：" + mList.get(position)
+   //                                                    .get("name"));
         // 中文  设备地址
-//        holder.mTv_address.setText("Device address：" + mList.get(position)
-//                                                  .get("address"));
-        holder.mTv_address.setText("设备地址：" + mList.get(position)
-                                                         .get("address"));
+       holder.mTv_address.setText("Device address：" + mList.get(position)
+                                                 .get("address"));
+   //      holder.mTv_address.setText("设备地址：" + mList.get(position)
+   //                                                       .get("address"));
         holder.mTv_name.setSelected(true);
         holder.mTv_address.setSelected(true);
         if(position == beSelectedPosition){
