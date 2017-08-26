@@ -58,10 +58,12 @@ public class TransferActivity
         extends AppCompatActivity
         implements View.OnClickListener
 {
-android.hardware.Camera mCamera;
+    android.hardware.Camera mCamera;
 
-    private static final String TAG                      = "ClientActivity";
+    private static final String TAG                      = "Jareld_ClientActivity";
     private static final int    MY_READ_EXTERNAL_STORAGE = 100;
+    private static final int    DISCONNECT               = 20;
+
     private RecyclerView                          mRcyc_devices;
     private Button                                mBtn_stop_connect;
     private Button                                mBtn_search;
@@ -92,7 +94,7 @@ android.hardware.Camera mCamera;
     private LinearLayout  mConnect_info_container;
     private TextView      mTv_connected_info_address;
     private TextView      mTv_connected_info_name;
-
+    private boolean mFirst_enter = true;
     private FlikerProgressBar mFliker_pregress;
     private static final int     MISS_PROGRESS = 1;
     private              Handler mHandler      = new Handler() {
@@ -101,6 +103,42 @@ android.hardware.Camera mCamera;
             switch (msg.what) {
                 case MISS_PROGRESS:
                     mFliker_pregress.setVisibility(View.GONE);
+                    break;
+                case DISCONNECT:
+                    mFirst_enter = true;
+                    mConnect_info_container.setVisibility(View.GONE);
+                    //中文 点击发送文件进行文件传输
+                    // mTv_trans_file.setText("Click to send the file for file transfer");
+                    mTv_trans_file.setText("点击发送文件进行文件传输");
+                    mRcyc_devices.setVisibility(View.VISIBLE);
+                    mManager.stopPeerDiscovery(mChannel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(int reason)
+                        {
+
+                        }
+                    });
+
+                    mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "onSuccess: 移除成功1");
+                        }
+
+                        @Override
+
+                        public void onFailure(int reason)
+                        {
+                            Log.d(TAG, "onFailure: 移除失败1");
+                        }
+                    });
+                    Toast.makeText(getApplicationContext(), "连接失败，请重新搜索设备并且连接", Toast.LENGTH_LONG)
+                         .show();
                     break;
                 default:
                     break;
@@ -199,9 +237,9 @@ android.hardware.Camera mCamera;
                                                      }
                                                      if (mTv_trans_file.getVisibility() == View.GONE) {
                                                          mTv_trans_file.setVisibility(View.VISIBLE);
-                                                          //中文 上一次文件传输完成，点击发送文件再进行文件传输
-                                                 //        mTv_trans_file.setText(
-                                                 //                "The last time the file transfer is complete, click to send the file and then transfer the file");
+                                                         //中文 上一次文件传输完成，点击发送文件再进行文件传输
+                                                         //        mTv_trans_file.setText(
+                                                         //                "The last time the file transfer is complete, click to send the file and then transfer the file");
                                                          mTv_trans_file.setText(
                                                                  "上一次文件传输完成，点击发送文件再进行文件传输");
                                                      }
@@ -234,25 +272,23 @@ android.hardware.Camera mCamera;
                                              });
                                              break;
                                          case "disconnect":
+                                             mFirst_enter = true;
                                              if (connectingProgressDialog != null && connectingProgressDialog.isShowing()) {
                                                  connectingProgressDialog.dismiss();
                                              }
                                              if (mIsFromCreateConnect) {
                                                  Log.d(TAG, "call: 这里是来自客户端的申请连接  然后把圈圈给miss掉");
                                                  //中文   连接失败 , 请重新连接
-//                                                 Toast.makeText(getApplicationContext(),
-//                                                                "The connection failed, please reconnect",
-//                                                                Toast.LENGTH_SHORT)
-//                                                      .show();
-                                                 Toast.makeText(getApplicationContext(),
-                                                                "连接失败 , 请重新连接",
-                                                                Toast.LENGTH_SHORT)
-                                                      .show();
+                                                 //                                                 Toast.makeText(getApplicationContext(),
+                                                 //                                                                "The connection failed, please reconnect",
+                                                 //                                                                Toast.LENGTH_SHORT)
+                                                 //                                                      .show();
+
                                                  mIsFromCreateConnect = false;
                                              }
                                              isDoing = false;
                                              //中文 点击发送文件进行文件传输
-                                           //  mTv_trans_file.setText("Click to send the file for file transfer");
+                                             //  mTv_trans_file.setText("Click to send the file for file transfer");
                                              mTv_trans_file.setText("点击发送文件进行文件传输");
                                              mConnect_info_container.setVisibility(View.GONE);
                                              mRcyc_devices.setVisibility(View.VISIBLE);
@@ -261,11 +297,11 @@ android.hardware.Camera mCamera;
                                              beSelectDevicePosition = -1;
                                              break;
                                          case "connect_fail":
-                                                //中文  启动文件传输失败 ，请重新发送文件
-//                                             Toast.makeText(getApplicationContext(),
-//                                                            "Start file transfer failed, please resend the file",
-//                                                            Toast.LENGTH_SHORT)
-//                                                  .show();
+                                             //中文  启动文件传输失败 ，请重新发送文件
+                                             //                                             Toast.makeText(getApplicationContext(),
+                                             //                                                            "Start file transfer failed, please resend the file",
+                                             //                                                            Toast.LENGTH_SHORT)
+                                             //                                                  .show();
                                              Toast.makeText(getApplicationContext(),
                                                             "启动文件传输失败 ，请重新发送文件",
                                                             Toast.LENGTH_SHORT)
@@ -301,8 +337,11 @@ android.hardware.Camera mCamera;
             public void onPeersAvailable(WifiP2pDeviceList peers) {
                 LogUtils.logInfo(TAG,
                                  "onPeersAvailable",
-                                 "::" + peers.getDeviceList()
-                                             .size());
+                                 ":111:" + peers.getDeviceList()
+                                                .size());
+                if (mFirst_enter) {
+                    return;
+                }
 
                 if (mPeerLists != null) {
                     mPeerLists.clear();
@@ -361,21 +400,7 @@ android.hardware.Camera mCamera;
                 mAdapter.setOnItemButtonClickConnectListener(new DeviceAdapter.ItemButtonClickConnectListener() {
                     @Override
                     public void onItemButtonClickConnectListener(int position) {
-                        //条目被点击的时候  需要连接
-                        //                        LogUtils.logInfo(TAG,
-                        //                                         "onItemButtonClickConnectListener",
-                        //                                         mPeerLists.get(position)
-                        //                                                   .get("name") + mPeerLists.get(position)
-                        //                                                                            .get("address"));
-                        //
-                        //                        mBeClickedDeviceName = mPeerLists.get(position)
-                        //                                                         .get("name");
-                        //
-                        //
-                        //                        createConnet(mPeerLists.get(position)
-                        //                                               .get("name"),
-                        //                                     mPeerLists.get(position)
-                        //                                               .get("address"));
+
                         if (beSelectDevicePosition == -1) {
                             //说明第一次选
                             if (mAdapter.getIvArr() != null && mAdapter.getIvArr()
@@ -412,11 +437,13 @@ android.hardware.Camera mCamera;
                 });
             }
         };
-      String taskA=  this.getApplicationInfo().taskAffinity;
+        String taskA = this.getApplicationInfo().taskAffinity;
         //这是申请连接后的回调
         mConnectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo info) {
+
+
                 //这是申请连接后的回调
                 Log.d(TAG, "createConnet: 第三步 连接的回调 ");
                 mInfo = info;
@@ -453,10 +480,10 @@ android.hardware.Camera mCamera;
                                 mConnect_info_container.setVisibility(View.VISIBLE);
                                 mRcyc_devices.setVisibility(View.GONE);
                                 //中文     设备名称：
-                              //  mTv_connected_info_name.setText("Device name：" + wifiP2pDevice.deviceName);
+                                //  mTv_connected_info_name.setText("Device name：" + wifiP2pDevice.deviceName);
                                 mTv_connected_info_name.setText("设备名称：" + wifiP2pDevice.deviceName);
                                 //中文     设备地址：
-                               // mTv_connected_info_address.setText("Device address：" + wifiP2pDevice.deviceAddress);
+                                // mTv_connected_info_address.setText("Device address：" + wifiP2pDevice.deviceAddress);
                                 mTv_connected_info_address.setText("设备地址：" + wifiP2pDevice.deviceAddress);
                                 mIsConnect = true;
                                 //中文  已经连接到设备：
@@ -464,10 +491,13 @@ android.hardware.Camera mCamera;
                                 mTv_connect_info.setText("已经连接到设备：");
 
                                 //中文 连接成功
-//                                Toast.makeText(TransferActivity.this, "Connect Success", Toast.LENGTH_SHORT)
-//                                     .show();
+                                //                                Toast.makeText(TransferActivity.this, "Connect Success", Toast.LENGTH_SHORT)
+                                //                                     .show();
                                 Toast.makeText(TransferActivity.this, "连接成功", Toast.LENGTH_SHORT)
                                      .show();
+                                if (mHandler.hasMessages(DISCONNECT)) {
+                                    mHandler.removeMessages(DISCONNECT);
+                                }
                                 mIsFromCreateConnect = false;
                                 isHandleFinished = true;
                                 return;
@@ -475,11 +505,12 @@ android.hardware.Camera mCamera;
                         }
 
                         //中文  ： 连接失败 ，请重新连接
-//                        Toast.makeText(TransferActivity.this, "The connection failed, please reconnect", Toast.LENGTH_SHORT)
-//                             .show();
+                        //                        Toast.makeText(TransferActivity.this, "The connection failed, please reconnect", Toast.LENGTH_SHORT)
+                        //                             .show();
+
                         Toast.makeText(TransferActivity.this, "连接失败 ，请重新连接", Toast.LENGTH_SHORT)
                              .show();
-
+                        mFirst_enter = true;
                         mIsFromCreateConnect = false;
                         isHandleFinished = true;
                     }
@@ -499,7 +530,28 @@ android.hardware.Camera mCamera;
                                                     this,
                                                     mPeerListListener,
                                                     mConnectionInfoListener);
+        mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
 
+            }
+
+            @Override
+            public void onFailure(int reason) {
+
+            }
+        });
+        mManager.cancelConnect(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(int reason) {
+
+            }
+        });
 
     }
 
@@ -519,11 +571,12 @@ android.hardware.Camera mCamera;
                                                            @Override
                                                            public void onCancel(DialogInterface dialog)
                                                            {
+                                                               mFirst_enter = true;
                                                                mConnect_info_container.setVisibility(
                                                                        View.GONE);
                                                                //中文 点击发送文件进行文件传输
                                                                // mTv_trans_file.setText("Click to send the file for file transfer");
-                                                                mTv_trans_file.setText("点击发送文件进行文件传输");
+                                                               mTv_trans_file.setText("点击发送文件进行文件传输");
                                                                mRcyc_devices.setVisibility(View.VISIBLE);
                                                                mManager.stopPeerDiscovery(mChannel,
                                                                                           new WifiP2pManager.ActionListener() {
@@ -559,6 +612,8 @@ android.hardware.Camera mCamera;
                                                                                     });
                                                            }
                                                        });
+
+        mHandler.sendEmptyMessageDelayed(DISCONNECT, 20000);
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = address;
         config.wps.setup = WpsInfo.PBC;
@@ -576,9 +631,9 @@ android.hardware.Camera mCamera;
             @Override
             public void onFailure(int reason) {
                 LogUtils.logInfo(TAG, "createConnet: ", "连接失败了");
-//中文  连接失败
-//                Toast.makeText(TransferActivity.this, "The connection failed ", Toast.LENGTH_SHORT)
-//                     .show();
+                //中文  连接失败
+                //                Toast.makeText(TransferActivity.this, "The connection failed ", Toast.LENGTH_SHORT)
+                //                     .show();
                 Toast.makeText(TransferActivity.this, "连接失败 ", Toast.LENGTH_SHORT)
                      .show();
             }
@@ -674,13 +729,16 @@ android.hardware.Camera mCamera;
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_device:
+                if (mFirst_enter) {
+                    mFirst_enter = false;
+                }
                 if (mIsConnect) {
                     //正在连接
                     //中文 已经处于连接状态，请先断开连接再进行搜索
-//                    Toast.makeText(getApplicationContext(),
-//                                   "Is already connected, please disconnect and then search",
-//                                   Toast.LENGTH_SHORT)
-//                         .show();
+                    //                    Toast.makeText(getApplicationContext(),
+                    //                                   "Is already connected, please disconnect and then search",
+                    //                                   Toast.LENGTH_SHORT)
+                    //                         .show();
                     Toast.makeText(getApplicationContext(),
                                    "已经处于连接状态，请先断开连接再进行搜索",
                                    Toast.LENGTH_SHORT)
@@ -721,15 +779,15 @@ android.hardware.Camera mCamera;
                 if (mIsConnect) {
                     //正在连接
                     //中文  已经处于连接状态，请先断开连接
-//                    Toast.makeText(getApplicationContext(), "Is already connected. Please disconnect", Toast.LENGTH_SHORT)
-//                         .show();
+                    //                    Toast.makeText(getApplicationContext(), "Is already connected. Please disconnect", Toast.LENGTH_SHORT)
+                    //                         .show();
                     Toast.makeText(getApplicationContext(), "已经处于连接状态，请先断开连接", Toast.LENGTH_SHORT)
                          .show();
                     return;
                 }
 
                 Log.d(TAG, "onClick: " + beSelectDevicePosition);
-                if (mPeerLists != null && mPeerLists.size() != 0) {
+                if (mPeerLists != null && mPeerLists.size() != 0 && !mFirst_enter) {
                     String name = mPeerLists.get(beSelectDevicePosition)
                                             .get("name");
                     String address = mPeerLists.get(beSelectDevicePosition)
@@ -737,10 +795,11 @@ android.hardware.Camera mCamera;
                     createConnet(name, address);
                     Log.d(TAG,
                           "onClick: 连接设备" + beSelectDevicePosition + "::" + name + "::" + address);
+
                 } else {
                     //中文  还未搜索到设备
-//                    Toast.makeText(getApplicationContext(), "No device has been searched", Toast.LENGTH_SHORT)
-//                         .show();
+                    //                    Toast.makeText(getApplicationContext(), "No device has been searched", Toast.LENGTH_SHORT)
+                    //                         .show();
                     Toast.makeText(getApplicationContext(), "还未搜索到设备", Toast.LENGTH_SHORT)
                          .show();
                 }
@@ -748,13 +807,16 @@ android.hardware.Camera mCamera;
             case R.id.stop_connect:
                 Log.d(TAG, "onClick: disconnec");
                 Log.d(TAG, "run: 通过点击 stopconnect进入的reset模式");
-
+                  mFirst_enter =true;
+                mPeerLists.clear();
+                mTv_connect_info.setVisibility(View.GONE);
+                mRcyc_devices.setVisibility(View.GONE);
                 mFliker_pregress.reset();
                 mConnect_info_container.setVisibility(View.GONE);
                 if (mTv_trans_file.getVisibility() == View.GONE) {
                     mTv_trans_file.setVisibility(View.VISIBLE);
                     //中文  点击发送文件进行文件传输
-                  //  mTv_trans_file.setText("Click to send the file for file transfer");
+                    //  mTv_trans_file.setText("Click to send the file for file transfer");
                     mTv_trans_file.setText("点击发送文件进行文件传输");
                 }
                 mRcyc_devices.setVisibility(View.VISIBLE);
@@ -789,7 +851,7 @@ android.hardware.Camera mCamera;
                 break;
 
             case R.id.send_file:
-                Intent intent = new Intent(this,PicVideoSelectorActivity.class);
+                Intent intent = new Intent(this, PicVideoSelectorActivity.class);
 
 
                 ArrayList picPaths = new ArrayList<String>();
@@ -813,7 +875,7 @@ android.hardware.Camera mCamera;
                 }
                 if (cursor.moveToFirst()) {
                     do {
-                        String path  = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                         videoPaths.add(path);
                     } while (cursor.moveToNext());
                 }
@@ -841,8 +903,8 @@ android.hardware.Camera mCamera;
                         picPaths.add(path);
                     } while (cursor_dcim.moveToNext());
                 }
-                intent.putExtra("pics" , picPaths);
-                intent.putExtra("videos" , videoPaths);
+                intent.putExtra("pics", picPaths);
+                intent.putExtra("videos", videoPaths);
                 startActivityForResult(intent, 20);
 
                 break;
@@ -865,19 +927,19 @@ android.hardware.Camera mCamera;
 
                 if (isDoing) {
                     //中文 ：正在传输文件，等待文件传输完成后再传输
-//                    Toast.makeText(getApplicationContext(),
-//                                   "Is transferring files, waiting for the file transfer to complete and then transfer",
-//                                   Toast.LENGTH_SHORT)
-//                         .show();
+                    //                    Toast.makeText(getApplicationContext(),
+                    //                                   "Is transferring files, waiting for the file transfer to complete and then transfer",
+                    //                                   Toast.LENGTH_SHORT)
+                    //                         .show();
                     Toast.makeText(getApplicationContext(),
                                    "正在传输文件，等待文件传输完成后再传输",
                                    Toast.LENGTH_SHORT)
                          .show();
                 } else if (!mIsConnect) {
 
-//中文  请先连接设备
-//                    Toast.makeText(getApplicationContext(), "Please connect the device first", Toast.LENGTH_SHORT)
-//                         .show();
+                    //中文  请先连接设备
+                    //                    Toast.makeText(getApplicationContext(), "Please connect the device first", Toast.LENGTH_SHORT)
+                    //                         .show();
                     Toast.makeText(getApplicationContext(), "请先连接设备", Toast.LENGTH_SHORT)
                          .show();
                 } else {
@@ -887,11 +949,11 @@ android.hardware.Camera mCamera;
                     Intent serviceIntent = new Intent(TransferActivity.this,
                                                       FileTransferService.class);
 
-                    mBeTransferFileName = selected_pv.size()+"::";
+                    mBeTransferFileName = selected_pv.size() + "::";
 
                     serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
 
-                    serviceIntent.putExtra(FileTransferService.REAL_FILE_PATH , selected_pv);
+                    serviceIntent.putExtra(FileTransferService.REAL_FILE_PATH, selected_pv);
 
                     serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
                                            mInfo.groupOwnerAddress.getHostAddress());
@@ -970,8 +1032,8 @@ android.hardware.Camera mCamera;
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             } else if (isDownloadsDocument(fileUri)) {
-                String id         = DocumentsContract.getDocumentId(fileUri);
-                Uri    contentUri = ContentUris.withAppendedId(Uri.parse(
+                String id = DocumentsContract.getDocumentId(fileUri);
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse(
                         "content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             } else if (isMediaDocument(fileUri)) {
@@ -1003,10 +1065,7 @@ android.hardware.Camera mCamera;
         return null;
     }
 
-    public String getDataColumn(Context context,
-                                Uri uri,
-                                String selection,
-                                String[] selectionArgs)
+    public String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs)
     {
         Cursor   cursor     = null;
         String[] projection = {MediaStore.Images.Media.DATA};
